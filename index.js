@@ -36,6 +36,18 @@ app.get('/pokemons/:id', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+app.post("/pokemons", async (req, res) => {
+  try {
+    const lastPokemon = await pokemon.findOne().sort({ id: -1 });
+    const nextId = lastPokemon ? lastPokemon.id + 1 : 1;
+
+    const newPokemon = new pokemon({ ...req.body, id: nextId });
+    await newPokemon.save();
+    res.status(201).json(newPokemon);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 
 
 
